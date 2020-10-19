@@ -34,7 +34,10 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true
     },
-    rak_id: DataTypes.INTEGER,
+    rak_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true
+    },
     judul_buku: DataTypes.STRING,
     penulis_buku: DataTypes.STRING,
     penerbit_buku: DataTypes.STRING,

@@ -5,22 +5,11 @@ const app = express()
 const models = require ('../models/index')
 const rak = models.rak
 
-//endpoint GET all
-app.get("/", (req, res) => {
-    rak.findAll()
-    .then(result => {
-        res.json(result)
-    }).catch(err => {
-        res.json({
-            message: err.message
-        })
-    });
-})
+// middleware for allow the request from body
+app.use(express.urlencoded({extended:true}))
 
-//endpoint GET by ID
-app.get("/:rak_id", (req, res) => {
-    let parameter = { rak_id = req.params.rak_id}
-    rak.findOne({where: parameter})
+app.get("/", async(req, res) => {
+    rak.findAll() // get all data
     .then(result => {
         res.json(result)
     })
@@ -31,33 +20,52 @@ app.get("/:rak_id", (req, res) => {
     })
 })
 
-//endpoint POST
-app.post("/", async (req, res) => {
-    //menampung data
+app.post("/", async(req, res) => {
+    // menampung data
     let data = {
-        nama_rak = req.body.nama_rak,
-        loaksi_rak = req.body.loaksi_rak,
+        nama_rak: req.body.nama_rak,
+        loaksi_rak: req.body.loaksi_rak
     }
-    //proses upload
+
     rak.create(data)
-    .then((result) => {
-        res.json(result)
-    }).catch((err) => {
+    .then(result => {
         res.json({
-            message: err.message
+            message: 'Data has been inserted',
+            data: result
         })
-    });
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })
 })
 
-//endpoint PUT by ID
-app.put("/", async (req, res) => {
-    
+app.put("/", async(req, res) => {
+    // tampung data
+    let data = {
+        nama_rak: req.body.nama_rak,
+        loaksi_rak: req.body.loaksi_rak
+    }
+
+    let param = { rak_id : req.body.rak_id }
+
+    rak.update(data,{where : param})
+    .then(result => {
+        res.json({
+            message: 'Data Updated',
+            data: result
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })
 })
 
-//endpoint DELETE by ID
-app.delete("/:rak_id", async (req, res) => {
+app.delete("/", async(req, res) => {
 
 })
 
-//export app
 module.exports = app
