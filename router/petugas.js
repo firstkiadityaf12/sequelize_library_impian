@@ -5,6 +5,9 @@ const app = express()
 const models = require ('../models/index')
 const petugas = models.petugas 
 
+//menggunakan md 5 untuk mengubha pass ke string random
+const md5 = require("md5")
+
 //middleware untuk mengizinkan request melalui body
 app.use(express.urlencoded({extended:true}))
 
@@ -46,7 +49,9 @@ app.post("/", async (req, res) => {
         nama_petugas : req.body.nama_petugas,
         jabatan_petugas : req.body.jabatan_petugas,
         no_telp_petugas : req.body.no_telp_petugas,
-        alamat_petugas : req.body.alamat_petugas
+        alamat_petugas : req.body.alamat_petugas,
+        username: req.body.username,
+        password: md5(req.body.password)
     }
     //create data
     petugas.create(data)
@@ -73,7 +78,9 @@ app.put("/", async (req, res) => {
         nama_petugas : req.body.nama_petugas,
         jabatan_petugas : req.body.jabatan_petugas,
         no_telp_petugas : req.body.no_telp_petugas,
-        alamat_petugas : req.body.alamat_petugas
+        alamat_petugas : req.body.alamat_petugas,
+        username: req.body.username,
+        password: md5(req.body.password)
     }
     //update
     petugas.update(data, {where: parameter})
